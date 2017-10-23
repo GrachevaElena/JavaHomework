@@ -1,3 +1,4 @@
+package com.netcracker.task2.classes;
 
 public class MyComplex {
 
