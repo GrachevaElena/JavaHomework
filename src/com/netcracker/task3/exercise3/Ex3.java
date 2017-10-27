@@ -1,6 +1,6 @@
 package com.netcracker.task3.exercise3;
 
-public class ex3 {
+public class Ex3 {
 
     public static void ex3a(){
         int size = 5;
