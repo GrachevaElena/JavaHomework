@@ -8,6 +8,7 @@ public class Ex2 {
         public int n;
         public Ex2.iFact f;
 
+        @Override
         public void func(){
             f.fact(this.n);
         }

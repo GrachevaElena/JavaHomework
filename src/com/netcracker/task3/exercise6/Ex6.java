@@ -33,6 +33,7 @@ public class Ex6 {
                 arr[i]=(int)(Math.random()*10);
         }
 
+        @Override
         public void func(){
             f.funcWithArr(arr);
         }
@@ -42,6 +43,7 @@ public class Ex6 {
         public Ex6.Items item=Ex6.Items.item3;
         public Ex6.iItem f;
 
+        @Override
         public void func(){
             f.funcWithItems(item);
         }
