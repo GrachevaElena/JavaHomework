@@ -8,6 +8,9 @@ public class Book {
     private Date receiptDate;
     private int numCopies;
 
+    public Book() {
+    }
+
     public Book(String name, Author[] authors, int publishYear, Date receiptDate, int numCopies) {
         this.name = name;
         this.authors = authors;

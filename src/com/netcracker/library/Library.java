@@ -10,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
 public class Library extends AbstractTableModel {
     private File f;
     private List<Book> books;
-    private static int n = 0;
+    //private static int n = 0;
     private int nCol = 5;
 
     public Library() {
@@ -21,7 +21,7 @@ public class Library extends AbstractTableModel {
         books.add(new Book("book1", a, 1995, new Date(), 2));
     }
 
-    void add(Book book) throws ExceptionBookIsExist {
+    public void add(Book book) throws ExceptionBookIsExist {
         if (!books.contains(book)) {
             books.add(book);
             //перезаписать в файл
@@ -29,33 +29,33 @@ public class Library extends AbstractTableModel {
         } else throw new ExceptionBookIsExist();
     }
 
-    void remove(Book book) throws ExceptionBookNotExist {
-        if (books.contains(book)) {
-            books.remove(book);
+    public void remove(int index) throws ExceptionInvalidIndex {
+        if (index>=0 && index<size()) {
+            books.remove(index);
             //перезаписать в файл
             fireTableDataChanged();
-        } else throw new ExceptionBookNotExist();
+        } else throw new ExceptionInvalidIndex();
     }
 
-    void edit(int num, Book newBook) throws ExceptionBookNotExist {
-        if (books.contains(newBook)) {
-            books.set(num, newBook);
+    public void edit(int index, Book newBook) throws ExceptionInvalidIndex {
+        if (index>=0 && index<size()) {
+            books.set(index, newBook);
             //перезаписать в файл
             fireTableDataChanged();
-        } else throw new ExceptionBookNotExist();
+        } else throw new ExceptionInvalidIndex();
     }
 
-    Book getBook(int index) throws ExceptionInvalidIndex {
+    public Book getBook(int index) throws ExceptionInvalidIndex {
         if (books.size() > index)
             return books.get(index);
         else throw new ExceptionInvalidIndex();
     }
 
-    int size() {
+    public int size() {
         return books.size();
     }
 
-    Book[] findBookByName(String str) {
+    public Book[] findBookByName(String str) {
         //изменяет список
         List res = new ArrayList();
         for (Book b : books)
@@ -64,7 +64,7 @@ public class Library extends AbstractTableModel {
         return (Book[]) res.toArray();
     }
 
-    Book[] findBookByAuthor(String authName) {
+    public Book[] findBookByAuthor(String authName) {
         //изменяет список
         List res = new ArrayList();
         for (Book b : books)
