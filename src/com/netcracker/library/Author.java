@@ -19,4 +19,19 @@ public class Author {
     public String toString() {
         return Name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Author author = (Author) o;
+
+        return Name != null ? Name.equals(author.Name) : author.Name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return Name != null ? Name.hashCode() : 0;
+    }
 }

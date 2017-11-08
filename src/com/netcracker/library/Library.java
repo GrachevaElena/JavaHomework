@@ -3,28 +3,40 @@ import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import com.netcracker.exceptions.*;
-import java.util.*;
-
+import com.netcracker.fileWorkers.MyFileReader;
+import com.netcracker.fileWorkers.MyFileWriter;
+import com.netcracker.listeners.MyFileListener;
 import javax.swing.table.AbstractTableModel;
 
-public class Library extends AbstractTableModel {
+public class Library extends AbstractTableModel implements MyFileListener{
     private File f;
     private List<Book> books;
-    //private static int n = 0;
     private int nCol = 5;
 
-    public Library() {
-        //чтение из файла в список
+    private MyFileWriter fileWriter=new MyFileWriter();
+    private MyFileReader fileReader=new MyFileReader();
+
+    @Override
+    public void update() {
+        if (fileReader.isChanged()) {
+            this.books = fileReader.getBooks();
+            fireTableDataChanged();
+        }
+    }
+
+    public Library(MyFileListener l) {
         books = new ArrayList();
-        Author[] a = new Author[1];
-        a[0] = new Author("author1");
-        books.add(new Book("book1", a, 1995, new Date(), 2));
+
+        fileReader.addListener(l);
+        fileWriter.addListener(l);
+        fileReader.addListener(this);
+
+        fileReader.startReading(books);
     }
 
     public void add(Book book) throws ExceptionBookIsExist {
         if (!books.contains(book)) {
             books.add(book);
-            //перезаписать в файл
             fireTableDataChanged();
         } else throw new ExceptionBookIsExist();
     }
@@ -32,7 +44,6 @@ public class Library extends AbstractTableModel {
     public void remove(int index) throws ExceptionInvalidIndex {
         if (index>=0 && index<size()) {
             books.remove(index);
-            //перезаписать в файл
             fireTableDataChanged();
         } else throw new ExceptionInvalidIndex();
     }
@@ -40,38 +51,22 @@ public class Library extends AbstractTableModel {
     public void edit(int index, Book newBook) throws ExceptionInvalidIndex {
         if (index>=0 && index<size()) {
             books.set(index, newBook);
-            //перезаписать в файл
             fireTableDataChanged();
         } else throw new ExceptionInvalidIndex();
     }
 
+    public void save(){
+        fileWriter.startWriting(books);
+    }
+
     public Book getBook(int index) throws ExceptionInvalidIndex {
-        if (books.size() > index)
+        if (index>=0 && books.size() > index)
             return books.get(index);
         else throw new ExceptionInvalidIndex();
     }
 
     public int size() {
         return books.size();
-    }
-
-    public Book[] findBookByName(String str) {
-        //изменяет список
-        List res = new ArrayList();
-        for (Book b : books)
-            if (b.getName().contains(str))
-                res.add(b);
-        return (Book[]) res.toArray();
-    }
-
-    public Book[] findBookByAuthor(String authName) {
-        //изменяет список
-        List res = new ArrayList();
-        for (Book b : books)
-            for (Author a : b.getAuthors())
-                if (a.getName().contains(authName))
-                    res.add(b);
-        return (Book[]) res.toArray();
     }
 
     @Override
@@ -90,7 +85,7 @@ public class Library extends AbstractTableModel {
             case 0:
                 return "Название";
             case 1:
-                return "Авторы";
+                return "Автор";
             case 2:
                 return "Год издания";
             case 3:
@@ -109,8 +104,7 @@ public class Library extends AbstractTableModel {
             case 0:
                 return b.getName();
             case 1:
-                String str = Arrays.toString(b.getAuthors());
-                return str.substring(1, str.length() - 1);
+                return b.getAuthor();
             case 2:
                 return b.getPublishYear();
             case 3:
@@ -131,12 +125,11 @@ public class Library extends AbstractTableModel {
             case 2:
                 return Integer.class;
             case 3:
-                return Date.class;
+                return MyDate.class;
             case 4:
                 return Integer.class;
         }
         return Object.class;
     }
-
 
 }

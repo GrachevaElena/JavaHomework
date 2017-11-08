@@ -1,21 +1,27 @@
 package com.netcracker.library;
+import java.io.Serializable;
 import java.util.*;
 
-public class Book {
+public class Book implements Serializable{
     private String name;
-    private Author[] authors;
+    private Author author;
     private int publishYear;
-    private Date receiptDate;
+    private MyDate receiptDate;
     private int numCopies;
 
     public Book() {
+        name=null;
+        author=null;
+        publishYear=-1;
+        receiptDate=null;
+        numCopies=-1;
     }
 
-    public Book(String name, Author[] authors, int publishYear, Date receiptDate, int numCopies) {
+    public Book(String name, Author author, int publishYear, MyDate receiptDate, int numCopies) {
         this.name = name;
-        this.authors = authors;
+        this.author = author;
         this.publishYear = publishYear;
-        this.receiptDate = receiptDate;
+        this.receiptDate=receiptDate;
         this.numCopies = numCopies;
     }
 
@@ -24,15 +30,15 @@ public class Book {
     }
 
     public void setName(String name) {
-        name = name;
+        this.name = name;
     }
 
-    public Author[] getAuthors() {
-        return authors;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthors(Author[] authors) {
-        this.authors = authors;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public int getPublishYear() {
@@ -43,12 +49,16 @@ public class Book {
         this.publishYear = publishYear;
     }
 
-    public Date getReceiptDate() {
+    public MyDate getReceiptDate() {
         return receiptDate;
     }
 
-    public void setReceiptDate(Date receiptDate) {
-        this.receiptDate = receiptDate;
+    public void setReceiptDate(MyDate receiptDate) {
+        this.receiptDate=receiptDate;
+    }
+
+    public void setReceiptDate(String line){
+        setReceiptDate(new MyDate(line));
     }
 
     public int getNumCopies() {
@@ -62,11 +72,30 @@ public class Book {
     @Override
     public String toString() {
         return
-                "Название: \"" + name + '\"' +
-                "\n Авторы: " + Arrays.toString(authors) +
-                "\n Год публикации: " + publishYear +
-                "\n Дата поступления: " + receiptDate +
-                "\n Число экземпляров: " + numCopies +
-                '\n';
+                name + "\r\n" + author +
+                        "\r\n" + publishYear +
+                        "\r\n" + receiptDate +
+                        "\r\n" + numCopies +
+                        "\r\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        if (publishYear != book.publishYear) return false;
+        if (!name.equals(book.name)) return false;
+        return author.equals(book.author);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + author.hashCode();
+        result = 31 * result + publishYear;
+        return result;
     }
 }
