@@ -1,5 +1,7 @@
 package com.netcracker.list;
 
+import java.util.Iterator;
+
 public class MainClass {
 
     public static void main(String[] args) {
@@ -19,6 +21,11 @@ public class MainClass {
 
         System.out.println("add with index: "+list);
 
+        System.out.print("iterator: ");
+        for(Iterator<Double> it = list.iterator(); it.hasNext();)
+            System.out.print(it.next()+" ");
+        System.out.println("");
+
         list.set(0, 0.6);
         list.set(2, 1.6);
         list.set(5, 4.1);
@@ -37,9 +44,18 @@ public class MainClass {
 
         System.out.println("remove: "+list);
 
+        Iterator<Double> it=list.iterator();
+        it.next();
+        it.remove();
+        it.next();
+        it.remove();
+
+        System.out.println("iterator removed, list is : "+list);
+
         list.clear();
 
         System.out.println("clear: "+list);
+
 
     }
 }
